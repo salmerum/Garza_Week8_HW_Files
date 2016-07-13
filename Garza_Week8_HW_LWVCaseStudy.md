@@ -5,7 +5,7 @@ July 12, 2016
 #Read in the data and inspect
 
 ```r
-setwd("~/Dropbox/SMUDataScienceClass/1st class/Week 8/Week8_HW_files")  #important step of setting the working directory
+setwd("~/Dropbox/SMUDataScienceClass/1st class/Week 8/Garza_Week8_HW_Files")  #important step of setting the working directory
 VoterData<-read.csv("LWV_Data.csv")
 head(VoterData)
 ```

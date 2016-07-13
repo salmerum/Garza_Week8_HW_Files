@@ -1,0 +1,72 @@
+---
+title: "Garza_Week8_HW"
+author: "Tony Garza"
+date: "July 12, 2016"
+output: 
+  html_document:
+    keep_md: TRUE
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#Read in the data and inspect
+```{r}
+setwd("~/Dropbox/SMUDataScienceClass/1st class/Week 8/Week8_HW_files")  #important step of setting the working directory
+VoterData<-read.csv("LWV_Data.csv")
+head(VoterData)
+summary(VoterData)
+str(VoterData)
+```
+# Finding Abnormalities with the Sample
+Because Hispanics and Non-Hispanics vote differently, I thought it would be a good idea to look into this first. The following plots show how the overall population voted and later the voting for each of the Young.Hispanic.Status buckets for the control and flyer and postcard groups.
+```{r}
+library(ggplot2)
+ggplot(VoterData, aes(x=VOTED2014, fill=Young.Hispanic.Status))+
+geom_histogram(binwidth=.25)+labs(title="Population: 2014 Voting by Young Hispanic Status")
+flyer<-subset(VoterData, flyer>0)
+nrow(flyer)
+```
+<br\>
+As you can see, non-Hispanics dominate the registered voters in Texas. They dominate even more when it comes to actually voting. 
+```{r}
+flyertotal<-sum(flyer$VOTED2014)
+flyertotal
+flyertotal/8000
+ggplot(flyer, aes(x=VOTED2014, fill=Young.Hispanic.Status))+
+geom_histogram(binwidth=.25)+labs(title="2014 Voting by Young Hispanic Status who got Flyer")
+```
+
+```{r}
+postcard<-subset(VoterData, post>0)
+nrow(postcard)
+postotal<-sum(postcard$VOTED2014)
+postotal
+postotal/8000
+ggplot(postcard, aes(x=VOTED2014, fill=Young.Hispanic.Status))+
+geom_histogram(binwidth=.25)+labs(title="2014 Voting by Young Hispanic Status who got Postcard")
+control<-subset(VoterData, control>0)
+nrow(control)
+controltotal<-sum(control$VOTED2014)
+controltotal
+controltotal/8000
+ggplot(control, aes(x=VOTED2014, fill=Young.Hispanic.Status))+
+geom_histogram(binwidth=.25)+labs(title="2014 Voting by Young Hispanic Status who were in Control Group")
+```
+
+<br\>
+Each of the samples however, show a distinctly lower percentage of non-Hispanics for each of the groups of 8000. This means the sample is not representative of the population. Also the control group had a higher percentage of non-Hispanics, thus the result that the control did better than the postcard and flyer methods. The postcards and flyers simply went out to people who already vote less than the general population. To be effective they could have targeted Hispanics, for instance, and made the control group say, all Hispanics, and then see if the postcard or flyer method worked to improve that group's voting.
+
+#Congressional District Representation
+While the number of hispanics getting flyers and postcards was statistically higher in the sample than the population, I went ahead and looked to see if there was any discrepancy in Congressional District represenation as well. Could be that skewing this data is what skewed the demographics as well.
+```{r}
+ggplot(VoterData, aes(x=U_S__CONGRESS))+
+geom_histogram(binwidth=.25)+labs(title="Population: 2014 Voting by Congressional District")
+ggplot(flyer, aes(x=U_S__CONGRESS))+
+  geom_histogram(binwidth=.25)+labs(title="2014 Voting by Congressional District for Flyers")
+ggplot(postcard, aes(x=U_S__CONGRESS))+
+  geom_histogram(binwidth=.25)+labs(title="2014 Voting by Congressional District for Postcards")  
+ggplot(control, aes(x=U_S__CONGRESS))+
+  geom_histogram(binwidth=.25)+labs(title="2014 Voting by Congressional District for Control Group")
+```
+
+Turns out there is also an issue that neither the control group nor the flyers and postcards groups are a good statistical match to the population with regards to how people voted per congressional district. Also the control group is way different than the flyer and postcard groups. 
